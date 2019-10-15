@@ -3,6 +3,7 @@
         <div class="row">
             <div id="signin-form" class="col-4 offset-4 text-center">
                 <div>
+                    <h2>เข้าสู่ระบบ</h2><br>
                     <p><label><b>Username : </b></label>
                     <input type="text" placeholder="Username"></p>
 
@@ -21,20 +22,20 @@
 
 <script>
 export default {
-    name: 'Signin'
+  name: 'Signin'
 }
 </script>
 
 <style>
     #signin-form {
-        background-color: lightgray; 
-        padding: 5%;
+        background-color: #FFBD71;
+        padding: 3%;
         margin-top: 100px;
-        width: 500px;
+        /* width: 500px; */
         border-radius: 3em;
     }
     input{
         border: 0px solid;
         border-radius: 0.3em
     }
-</style>
+</style> 

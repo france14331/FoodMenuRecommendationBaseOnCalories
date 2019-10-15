@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Index from '@/components/Index'
 import Signin from '@/components/Signin'
+import Register from '@/components/Register'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/signin',
       name: 'Signin',
       component: Signin
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register
     }
   ],
   mode: 'history'
