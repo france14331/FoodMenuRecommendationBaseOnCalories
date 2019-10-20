@@ -12,7 +12,7 @@
                 </div>
 
                 <div>
-                    <button type="button" class="btn btn-link">สมัครสมาชิก</button>
+                    <a href="/register"><button type="button" class="btn btn-link">สมัครสมาชิก</button></a>
                     <button type="button" class="btn btn-primary">เข้าสู่ระบบ</button>
                 </div>
             </div>

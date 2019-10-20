@@ -3,7 +3,7 @@
     <div id="index" class="col-sm-6 ">
       <h1>Food Menu Reccomendation Base On Calories</h1><br>
       <p>เว็บไซต์ที่จะช่วยแนะนำอาหารที่ให้พลังงานสารอาหารที่เหมาะสม และยังแนะนำสถานที่ใกล้เคียงที่สามารถหาซื้อาหารที่แนะนำให้กับคุณได้</p><br>
-      <button type="button" class="btn btn-light">สมัครสมาชิก</button>
+      <a href="/register"><button type="button" class="btn btn-light">สมัครสมาชิก</button></a>
     </div>
     <div class="col-sm-6">
 
