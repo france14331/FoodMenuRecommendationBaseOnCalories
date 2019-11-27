@@ -5,10 +5,10 @@
                 <div>
                     <h2>เข้าสู่ระบบ</h2><br>
                     <p><label><b>Username : </b></label>
-                    <input type="text" placeholder="Username"></p>
+                    <input type="text" placeholder="Username" v-model="username"></p>
 
                     <p><label><b>Password : </b></label>
-                    <input type="password" placeholder="Password"></p>
+                    <input type="password" placeholder="Password" v-model="password"></p>
                 </div>
 
                 <div>
@@ -22,7 +22,13 @@
 
 <script>
 export default {
-  name: 'Signin'
+  name: 'Signin',
+  data() {
+      return{
+          usernamr : "",
+          pasword : ""
+      }
+  }
 }
 </script>
 

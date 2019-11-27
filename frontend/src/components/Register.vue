@@ -15,15 +15,15 @@
                     </div>
                     <div class="col-4">
                         <!-- username -->
-                        <p><input type="text" placeholder="    8-16 Character: A-Z a-z 0-9"></p><br>
+                        <p><input type="text" v-model="username" placeholder="    8-16 Character: A-Z a-z 0-9"></p><br>
 
                         <!-- password -->
-                        <p><input type="password" placeholder="    8-16 Character: A-Z a-z 0-9"></p><br>
+                        <p><input type="password" v-model="password" placeholder="    8-16 Character: A-Z a-z 0-9"></p><br>
 
                         <p><input type="password" placeholder="    8-16 Character: A-Z a-z 0-9"></p><br>
 
                         <!-- email -->
-                        <p><input type="email" placeholder="    8-16 Character: A-Z a-z 0-9"></p>
+                        <p><input type="email" v-model="email" placeholder="    8-16 Character: A-Z a-z 0-9"></p>
                     </div>
                     <div class="col-1">
                         <p><b><label>ชื่อ*: </label></b></p><br>
@@ -33,20 +33,20 @@
                     </div>
                     <div class="col-2">
                         <!-- name -->
-                        <p><input type="text" placeholder="    Name"></p><br>
+                        <p><input type="text" v-model="name" placeholder="    Name"></p><br>
 
                         <!-- gender -->
-                        <p><select>
+                        <p><select v-model="gender">
                             <option value=""></option>
                             <option value="male">ชาย</option>
                             <option value="female">หญิง</option>
                         </select></p><br>
 
                         <!-- birth day -->
-                        <p><input type="date"></p><br>
+                        <p><input type="date" v-model="birthday"></p><br>
 
                         <!-- religion -->
-                        <p><select>
+                        <p><select v-model="religion">
                             <option value=""></option>
                             <option value="buddha">พุทธ</option>
                             <option value="chirst">คริสต์</option>
@@ -59,14 +59,14 @@
                         <p><b><label>ส่วนสูง*: </label></b></p><br>
                     </div>
                     <div class="col-2">
-                        <!-- name -->
-                        <p><input type="text" placeholder="    Surname"></p><br>
+                        <!-- surname -->
+                        <p><input type="text" v-model="surname" placeholder="    Surname"></p><br>
 
                         <!-- weight -->
-                        <p><input type="text" placeholder=""></p><br>
+                        <p><input type="text" v-model="weight" placeholder=""></p><br>
 
                         <!-- height -->
-                        <p><input type="text" placeholder=""></p>
+                        <p><input type="text" v-model="height" placeholder=""></p>
                     </div>
                     <div class="col-10"><p>หมายเหตุ : กรุณากรอกข้อมูลที่มีเครื่องหมาย "*" ให้ครบถ้วนก่อนทำการกดปุ่มสมัครสมาชิก</p></div>
                     <div class="col-2">
@@ -76,12 +76,37 @@
                 </div>
             </div>
         </div>
+        <!-- <h1>{{ username }}</h1>
+        <h1>{{ password }}</h1>
+        <h1>{{ email }}</h1>
+        <h1>{{ name }}</h1>
+        <h1>{{ surname }}</h1>
+        <h1>{{ gender }}</h1>
+        <h1>{{ religion }}</h1>
+        <h1>{{ birthday }}</h1>
+        <h1>{{ height }}</h1>
+        <h1>{{ weight }}</h1> -->
     </div>
+    
 </template>
 
 <script>
 export default {
-    name: 'Register'
+    name: 'Register',
+    data() {
+        return {
+            username : "",
+            password : "",
+            email : "",
+            name : "",
+            surname : "",
+            gender : "",
+            birthday : "",
+            religion : "",
+            weight : "",
+            height : ""
+        }
+    }
 }
 </script>
 
