@@ -5,10 +5,10 @@
                 <div>
                     <h2>เข้าสู่ระบบ</h2><br>
                     <p><label><b>Username : </b></label>
-                    <input type="text" placeholder="Username" v-model="username"></p>
+                    <input type="text" placeholder=" Username" v-model="username"></p>
 
                     <p><label><b>Password : </b></label>
-                    <input type="password" placeholder="Password" v-model="password"></p>
+                    <input type="password" placeholder=" Password" v-model="password"></p>
                 </div>
 
                 <div>
@@ -24,10 +24,12 @@
 export default {
   name: 'Signin',
   data() {
-      return{
-          usernamr : "",
-          pasword : ""
+    return {
+      signin: {
+        username: '',
+        password: ''
       }
+    }
   }
 }
 </script>
@@ -44,4 +46,4 @@ export default {
         border: 0px solid;
         border-radius: 0.3em
     }
-</style> 
+</style>

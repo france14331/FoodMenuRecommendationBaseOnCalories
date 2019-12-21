@@ -11,19 +11,18 @@
                         <p><b><label>รหัสผ่าน*: </label></b></p><br>
                         <p><b><label>ยืนยันรหัสผ่าน*: </label></b></p><br>
                         <p><b><label>อีเมล*: </label></b></p><br>
-                        
                     </div>
                     <div class="col-4">
                         <!-- username -->
-                        <p><input type="text" v-model="username" placeholder="    8-16 Character: A-Z a-z 0-9"></p><br>
+                        <p><input type="text" v-model="username" placeholder=" 8-16 Character: A-Z a-z 0-9"></p><br>
 
                         <!-- password -->
-                        <p><input type="password" v-model="password" placeholder="    8-16 Character: A-Z a-z 0-9"></p><br>
+                        <p><input type="password" v-model="password" placeholder=" 8-16 Character: A-Z a-z 0-9"></p><br>
 
-                        <p><input type="password" placeholder="    8-16 Character: A-Z a-z 0-9"></p><br>
+                        <p><input type="password" placeholder=" 8-16 Character: A-Z a-z 0-9"></p><br>
 
                         <!-- email -->
-                        <p><input type="email" v-model="email" placeholder="    8-16 Character: A-Z a-z 0-9"></p>
+                        <p><input type="email" v-model="email" placeholder=" 8-16 Character: A-Z a-z 0-9"></p>
                     </div>
                     <div class="col-1">
                         <p><b><label>ชื่อ*: </label></b></p><br>
@@ -33,7 +32,7 @@
                     </div>
                     <div class="col-2">
                         <!-- name -->
-                        <p><input type="text" v-model="name" placeholder="    Name"></p><br>
+                        <p><input type="text" v-model="name" placeholder=" Name"></p><br>
 
                         <!-- gender -->
                         <p><select v-model="gender">
@@ -60,7 +59,7 @@
                     </div>
                     <div class="col-2">
                         <!-- surname -->
-                        <p><input type="text" v-model="surname" placeholder="    Surname"></p><br>
+                        <p><input type="text" v-model="surname" placeholder=" Surname"></p><br>
 
                         <!-- weight -->
                         <p><input type="text" v-model="weight" placeholder=""></p><br>
@@ -87,27 +86,30 @@
         <h1>{{ height }}</h1>
         <h1>{{ weight }}</h1> -->
     </div>
-    
+
 </template>
 
 <script>
 export default {
-    name: 'Register',
-    data() {
-        return {
-            username : "",
-            password : "",
-            email : "",
-            name : "",
-            surname : "",
-            gender : "",
-            birthday : "",
-            religion : "",
-            weight : "",
-            height : ""
-        }
+  name: 'Register',
+  data() {
+    return {
+      register: {
+        username: '',
+        password: '',
+        email: '',
+        name: '',
+        surname: '',
+        gender: '',
+        birthday: '',
+        religion: '',
+        weight: '',
+        height: ''
+      }
     }
+  }
 }
+
 </script>
 
 <style>

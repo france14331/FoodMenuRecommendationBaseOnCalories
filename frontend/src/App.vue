@@ -11,11 +11,14 @@ export default {
 </script>
 
 <style>
+@import "./assets/css/style.css";
+
 body{
+  font-family: 'Kanit';
   background-color: #FFDCA2
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
