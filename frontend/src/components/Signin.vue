@@ -1,4 +1,6 @@
 <template>
+  <div>
+    <Navbar></Navbar>
     <div class="container-fluid justify-content-center">
         <div class="row">
             <div id="signin-form" class="col-4 offset-4 text-center">
@@ -18,12 +20,18 @@
             </div>
         </div>
     </div>
+  </div>
 </template>
 
 <script>
+import Navbar from '@/components/Navbar'
+
 export default {
   name: 'Signin',
-  data() {
+  components: {
+    Navbar: Navbar
+  },
+  data () {
     return {
       signin: {
         username: '',

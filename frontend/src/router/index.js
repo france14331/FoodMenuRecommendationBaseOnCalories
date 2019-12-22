@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-//import HelloWorld from '@/components/HelloWorld'
+//  import HelloWorld from '@/components/HelloWorld'
 import Index from '@/components/Index'
 import Signin from '@/components/Signin'
 import Register from '@/components/Register'
+import MainProfile from '@/components/MainProfile'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/main',
+      name: 'MainProfile',
+      component: MainProfile
     }
   ],
   mode: 'history'

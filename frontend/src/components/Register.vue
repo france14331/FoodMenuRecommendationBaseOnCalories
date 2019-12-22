@@ -92,7 +92,7 @@
 <script>
 export default {
   name: 'Register',
-  data() {
+  data () {
     return {
       register: {
         username: '',
