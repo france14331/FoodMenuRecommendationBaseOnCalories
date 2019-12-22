@@ -5,6 +5,7 @@ import Index from '@/components/Index'
 import Signin from '@/components/Signin'
 import Register from '@/components/Register'
 import MainProfile from '@/components/MainProfile'
+import Recommend from '@/components/RecommendFood'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/main',
       name: 'MainProfile',
       component: MainProfile
+    },
+    {
+      path: '/recommend',
+      name: 'Recommend',
+      component: Recommend
     }
   ],
   mode: 'history'

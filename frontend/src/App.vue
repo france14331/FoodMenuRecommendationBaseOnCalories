@@ -13,12 +13,12 @@ export default {
 <style>
 @import "./assets/css/style.css";
 
-body{
+body {
   font-family: 'Kanit';
   background-color: #FFDCA2
 }
 
-#app {  
+#app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
