@@ -1,50 +1,58 @@
 const express = require('express')
 const app = express()
 
+var mysql = require('mysql')
+var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'food_recommendation'
+})
+
+connection.connect()
+
+connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
+  if (err) throw err
+
+  console.log('The solution is: ', rows[0].solution)
+})
+
+
+
 app.use(express.json())
 
-const products = [{
-    id: '1001',
-    name: 'Node.js for Beginners',
-    category: 'Node',
-    price: 990
-  }, {
-    id: '1002',
-    name: 'React 101',
-    category: 'React',
-    price: 3990
-  }, {
-    id: '1003',
-    name: 'Getting started with MongoDB',
-    category: 'MongoDB',
-    price: 1990
+const users = [{
+    username: 'Thanaset',
+    password: 'Thanaset'
   }]
   
-  app.get('/products', (req, res) => {
-    res.json(products)
+  app.get('/signin', (req, res) => {
+    res.json(users)
   })
   
-  app.get('/products/:id', (req, res) => {
-    const { id } = req.params
-    const result = products.find(product => product.id === id)
+  app.get('/signin/:username', (req, res) => {
+    const { username } = req.params
+    const result = users.find(user => user.username === username)
     res.json(result)
   })
   
-  app.post('/products', (req, res) => {
+  app.post('/signin', (req, res) => {
     const payload = req.body
     res.json(payload)
   })
   
-  app.put('/products/:id', (req, res) => {
-    const { id } = req.params
-    res.json({ id })
+  app.put('/signin/:username', (req, res) => {
+    const { username } = req.params
+    res.json({ username })
   })
   
-  app.delete('/products/:id', (req, res) => {
-    const { id } = req.params
-    res.json({ id })
+  app.delete('/signin/:username', (req, res) => {
+    const { username } = req.params
+    res.json({ username })
   })
 
 app.listen(9000, () => {
     console.log('Application is running on port 9000')
 })
+
+connection.end()
