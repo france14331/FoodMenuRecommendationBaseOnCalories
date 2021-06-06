@@ -58,6 +58,7 @@
                         <p><b><label>นามสกุล*: </label></b></p><br>
                         <p><b><label>น้ำหนัก*: </label></b></p><br>
                         <p><b><label>ส่วนสูง*: </label></b></p><br>
+                        <p><b><label>ออกกำลังกาย ครั้ง/สัปดาห์*: </label></b></p><br>
                     </div>
                     <div class="col-2">
                         <!-- surname -->
@@ -67,7 +68,10 @@
                         <p><input type="text" v-model="weight" placeholder=""></p><br>
 
                         <!-- height -->
-                        <p><input type="text" v-model="height" placeholder=""></p>
+                        <p><input type="text" v-model="height" placeholder=""></p><br>
+
+                        <!-- ActPerWeek -->
+                        <p><input type="text" v-model="actPerWeek" placeholder=""></p>
                     </div>
                     <div class="col-10"><p>หมายเหตุ : กรุณากรอกข้อมูลที่มีเครื่องหมาย "*" ให้ครบถ้วนก่อนทำการกดปุ่มสมัครสมาชิก</p></div>
                     <div class="col-2">
@@ -111,7 +115,8 @@ export default {
         birthday: '',
         religion: '',
         weight: '',
-        height: ''
+        height: '',
+        actPerWeek: ''
       }
     }
   }
