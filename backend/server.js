@@ -28,6 +28,12 @@ var mysqlPool = MySQL.createPool({
 });
 
 // API Sign In
+// Format JSON //
+// {
+//     "username": "test",
+//     "password": "test"
+// }
+// Format JSON //
 app.post('/signin', (req, res) => {
     mysqlPool.getConnection(async function (err, connection) {
         if (err) {
@@ -70,6 +76,22 @@ app.post('/signin', (req, res) => {
 })
 
 // API Sign UP
+// Format JSON //
+// {
+//     "username": "test",
+//     "password": "1234",
+//     "confirm_password": "1234",
+//     "email": "test@gmail.com",
+//     "firstname": "test",
+//     "lastname": "test",
+//     "gender": "male",
+//     "birthday": "15/03/1998",
+//     "weight": 58,
+//     "height": 160,
+//     "religion": "พุทธ",
+//     "actPerWeek": "0"
+// }
+// Format JSON //
 app.post('/signup', (req, res) => {
     mysqlPool.getConnection(async function (err, connection) {
         if (err) {
@@ -239,6 +261,39 @@ app.post('/signup', (req, res) => {
                 })
             })
 
+        }
+    })
+})
+
+// API MENU RECOMMEND
+app.post('/menu/recommend', (req, res) => {
+    mysqlPool.getConnection(async function (err, connection) {
+        if (err) {
+            console.log(`[${NAME}] Error -> ${err.message}`);
+            return res.status(500).json({ "isError": true, "message": "ไม่สามารถเชื่อมต่อฐานข้อมูลได้" })
+        } else {
+            let userId = req.body.users_id
+
+            // Valiadate
+
+            // คำนวณแคลลอรี่ต่อมื้อ
+            var sqlGetTDEE = "SELECT TDEE FROM users_update_info WHERE UsersID = ?"
+            connection.query(sqlGetTDEE, [userId], function (err, results) {
+                if (err) {
+                    console.log(`[${NAME}] sqlGetTDEE Error -> ${err}`)
+                    return res.status(500).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                }
+
+                if (!results.length) {
+                    return res.status(404).json({ "isError": true, "message": "ไม่พบข้อมูล TDEE ของผู้ใช้งาน" })
+                }
+
+                let tdee = results[0].TDEE
+                let calTDEE = tdee - 300
+                let caloriesPerPotion = parseInt(Math.round(calTDEE / 3))
+
+                return res.status(200).json({ "isError": false, "caloriesPerPotion": caloriesPerPotion })
+            })
         }
     })
 })
