@@ -13,6 +13,20 @@ const NAME = "Food Menu Recommendation"
 const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
 
+// Set CORS
+app.use((req, res, next) => {
+    const allowedOrigins = [
+        'http://localhost:8080/', 'http://localhost:8081/'
+    ];
+    if (!allowedOrigins.includes(req.headers.origin)) {
+        res.header("Access-Control-Allow-Origin", req.headers.origin);
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, authorization");
+        res.header("Access-Control-Allow-Credentials", true);
+        res.header("Access-Control-Allow-Methods", "*");
+    }
+    return next();
+})
+
 // parse application/json
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -51,7 +65,7 @@ app.post('/signin', (req, res) => {
                     }
 
                     if (!results.length) {
-                        return res.status(401).json({ "isError": true, "message": "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง" })
+                        return res.status(200).json({ "isError": true, "message": "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง" })
                     }
 
                     const payload = {
