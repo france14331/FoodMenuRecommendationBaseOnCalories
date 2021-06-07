@@ -266,6 +266,11 @@ app.post('/signup', (req, res) => {
 })
 
 // API MENU RECOMMEND
+// Format JSON //
+// {
+//     "users_id": "5"
+// }
+// Format JSON //
 app.post('/menu/recommend', (req, res) => {
     mysqlPool.getConnection(async function (err, connection) {
         if (err) {
@@ -292,7 +297,23 @@ app.post('/menu/recommend', (req, res) => {
                 let calTDEE = tdee - 300
                 let caloriesPerPotion = parseInt(Math.round(calTDEE / 3))
 
-                return res.status(200).json({ "isError": false, "caloriesPerPotion": caloriesPerPotion })
+                // แสดงเมนูแนะนำ
+                var sqlGetMenuRecommend = "SELECT DISHSID, DISH CALORIES FROM dishs WHERE CALORIES <= ?"
+                connection.query(sqlGetMenuRecommend, [caloriesPerPotion], function (err, results) {
+                    if (err) {
+                        console.log(`[${NAME}] sqlGetMenuRecommend Error -> ${err}`)
+                        return res.status(500).json({ "isError": false, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                    }
+
+                    if (!results.length) {
+                        return res.status(404).json({ "isError": true, "message": "ไม่พบเมนูแนะนำสำหรับผู้ใช้งาน" })
+                    }
+
+                    // สุ่มเมนูสำหรับแนะนำ
+                    let randomMenu = Math.floor(Math.random() * results.length)
+
+                    return res.status(200).json({ "isError": false, "caloriesPerPotion": caloriesPerPotion, "menuRecommend": results[randomMenu] })
+                })
             })
         }
     })
