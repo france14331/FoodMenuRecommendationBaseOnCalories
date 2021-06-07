@@ -14,6 +14,7 @@ export default {
 @import "./assets/css/style.css";
 
 body {
+  width: 99%;
   font-family: 'Kanit';
   background-color: #FFDCA2
 }

@@ -1,23 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-//  import HelloWorld from '@/components/HelloWorld'
 import Index from '@/components/Index'
 import Signin from '@/components/Signin'
 import Register from '@/components/Register'
 import MainProfile from '@/components/MainProfile'
 import Recommend from '@/components/RecommendFood'
+import PageNotFound from '@/components/PageNotFound'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'HelloWorld',
-    //   component: HelloWorld
-    // },
     {
-      path: '/index',
+      path: '/',
       name: 'Index',
       component: Index
     },
@@ -40,7 +35,13 @@ export default new Router({
       path: '/recommend',
       name: 'Recommend',
       component: Recommend
+    },
+    {
+      path: '*',
+      name: 'PageNotFound',
+      component: PageNotFound
     }
   ],
-  mode: 'history'
+  mode: 'history',
+  linkActiveClass: 'active'
 })
