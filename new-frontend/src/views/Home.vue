@@ -10,9 +10,9 @@
             และยังแนะนำสถานที่ใกล้เคียงที่สามารถหาซื้ออาหารที่แนะนำให้กับคุณได้
           </p>
           <br />
-          <a href="/register">
+          <router-link to='/signup'>
             <button type="button" class="btn btn-light">สมัครสมาชิก</button>
-          </a>
+          </router-link>
         </div>
         <div class="col-sm-6"></div>
       </div>

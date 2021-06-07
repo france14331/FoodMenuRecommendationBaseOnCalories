@@ -11,7 +11,7 @@
           </div>
           <div class="row">
             <div class="col-sm-12">
-              <div class="card bg-lightorange shadow border-0 mb-5">
+              <div class="card shadow border-0 mb-5 bg-lightorange">
                 <div class="card-body">
                   <form>
                     <div class="row">
@@ -128,13 +128,18 @@
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-sm-6 text-left">
+                      <div class="col-sm-8 text-left">
                         <label class="col-form-label">หมายเหตุ : กรุณากรอกข้อมูลที่มีเครื่องหมาย "*" ให้ครบถ้วนก่อนทำการกดปุ่มสมัครสมาชิก</label>
                       </div>
-                      <div class="col-sm-6">
+                      <div class="col-sm-4">
                         <div class="row">
-                          <div class="col-sm-6 ms-auto text-right">
-                            <button type="button" class="btn btn-primary">สมัครสมาชิก</button>
+                          <div class="col-sm-6 ms-auto text-right mb-2">
+                            <button type="button" class="btn btn-primary col-sm-12 col-12">สมัครสมาชิก</button>
+                          </div>
+                          <div class="col-sm-6 text-right">
+                            <router-link to='/'>
+                              <button type="button" class="btn btn-outline-danger col-sm-12 col-12">ยกเลิก</button>
+                            </router-link>
                           </div>
                         </div>
                       </div>
@@ -157,9 +162,3 @@ export default {
   name: "SignUp",
 };
 </script>
-
-<style scoped>
-.bg-lightorange {
-  background-color: #ffbd71;
-}
-</style>

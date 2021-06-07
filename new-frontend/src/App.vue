@@ -42,4 +42,10 @@ html {
 .text-right {
   text-align: right !important;
 }
+
+.bg-lightorange {
+  background-color: #ffbd71 !important;
+}
+
+.bg-primary{background-color:#0d6efd!important}
 </style>
