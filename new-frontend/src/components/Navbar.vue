@@ -2,7 +2,9 @@
   <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">FOOD RECCOMENDATION</a>
+        <router-link class="navbar-brand" to="/">
+          FOOD RECCOMENDATION
+        </router-link>
         <button
           class="navbar-toggler"
           type="button"
@@ -19,9 +21,13 @@
           id="navbarNavAltMarkup"
         >
           <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/signup">สมัครสมาชิก</a>
+            <router-link class="nav-item nav-link" to="/signup"
+              >สมัครสมาชิก</router-link
+            >
             <a class="nav-link disabled"> | </a>
-            <a class="nav-item nav-link" href="/signin">เข้าสู่ระบบ</a>
+            <router-link class="nav-item nav-link" to="/signin"
+              >เข้าสู่ระบบ</router-link
+            >
           </div>
         </div>
       </div>

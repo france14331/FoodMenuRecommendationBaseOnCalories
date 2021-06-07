@@ -1,6 +1,6 @@
 <template>
-  <div class="sign-in h-100 my-5">
-    <div class="container">
+  <div class="sign-in">
+    <div class="container my-5">
       <div class="row">
         <div class="col-sm-12">
           <div class="row">
@@ -53,12 +53,24 @@
                     </div>
                     <div class="row">
                       <div class="col-sm-12">
-                        <button type="submit" class="btn btn-primary col-sm-6 col-12">เข้าสู่ระบบ</button>
+                        <button
+                          type="submit"
+                          class="btn btn-primary col-sm-6 col-12"
+                        >
+                          เข้าสู่ระบบ
+                        </button>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-sm-12 mt-2">
-                        <button type="button" class="btn btn-outline-dark col-sm-6 col-12">สมัครสมาชิก</button>
+                        <router-link to="/signup">
+                          <button
+                            type="button"
+                            class="btn btn-outline-dark col-sm-6 col-12"
+                          >
+                            สมัครสมาชิก
+                          </button>
+                        </router-link>
                       </div>
                     </div>
                   </form>
