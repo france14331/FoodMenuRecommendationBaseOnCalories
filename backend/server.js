@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 // MySQL Pool Connection
 var mysqlPool = MySQL.createPool({
     connectionLimit: 1000,
-    host: '35.238.114.100',
+    host: '34.136.96.252',
     port: '3306',
     user: 'root',
     password: '1234',
@@ -413,6 +413,80 @@ app.get('/user/:userid/info', (req, res) => {
                 "isError": true, "message": "สำเร็จ"
             })
         })
+    })
+})
+
+// API UPDATE USER INFO
+// Format JSON //
+// {
+//     "weight": "0",
+//     "height": 0,
+//     "actPerWeek": 0,
+//     "age": 23,
+//     "gender": "ผู้ชาย"
+// }
+// Format JSON //
+app.post('/user/:userid/info/update', (req, res) => {
+    let userId = req.params.userid;
+    let weight = req.body.weight
+    let height = req.body.height
+    let age = req.body.age
+    let gender = req.body.gender
+    let actPerWeek = req.body.actPerWeek
+
+    // Validate
+    if (isEmptyOrSpaces(userId)) {
+        return res.status(200).json({ "isError": true, "message": "ไม่พบข้อมูลผู้ใช้งาน" })
+    }
+
+    if (isNaN(weight) || isNaN(height) || isNaN(actPerWeek)) {
+        return res.status(200).json({ "isError": true, "message": "กรุณากรอกข้อมูลเป็นตัวเลขจำนวนเต็ม" })
+    }
+
+    // คำนวณ BMR
+    // เพศชาย
+    let bmr = 0
+    if (gender.toUpperCase() == "ชาย") {
+        bmr = 66 + (13.7 * parseInt(weight)) + (5 * parseInt(height)) - (6.8 * age)
+    } else if (gender.toUpperCase() == "หญิง") { // เพศหญิง
+        bmr = 665 + (9.6 * parseInt(weight)) + (1.8 * parseInt(height)) - (4.7 * age)
+    }
+
+    // คำนวณ TDEE
+    let tdee = 0
+    actPerWeek = parseInt(actPerWeek)
+    if (actPerWeek == 0) {
+        tdee = bmr * 1.2
+    } else if (actPerWeek >= 1 && actPerWeek <= 3) {
+        tdee = bmr * 1.375
+    } else if (actPerWeek >= 3 && actPerWeek <= 5) {
+        tdee = bmr * 1.55
+    } else if (actPerWeek >= 6 && actPerWeek <= 7) {
+        tdee = bmr * 1.725
+    } else {
+        tdee = bmr * 1.9
+    }
+
+    console.log(weight, height, actPerWeek, bmr, tdee, userId, age, gender)
+
+    mysqlPool.getConnection(async function (err, connection) {
+        if (err) {
+            console.log(`[${NAME}] Error -> ${err.message}`);
+            return res.status(500).json({ "isError": true, "message": "ไม่สามารถเชื่อมต่อฐานข้อมูลได้" })
+        } else {
+            var sqlUpdateUserInfo = "UPDATE users_update_info SET Weight = ?, Height = ?, ActPerWeek = ?, BMR = ?, TDEE = ? WHERE UsersId = ?"
+            connection.query(sqlUpdateUserInfo, [weight, height, actPerWeek, bmr, tdee, userId], function (err, results) {
+                if (err) {
+                    console.log(`[${NAME}] sqlUpdateUserInfo Error -> ${err}`)
+                    return res.status(200).json({ "isError": false, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                }
+
+                return res.status(200).json({
+                    "isError": false,
+                    "message": "แก้ไขข้อมูลสำเร็จ"
+                })
+            })
+        }
     })
 })
 

@@ -120,8 +120,6 @@ import axios from "axios";
 
 const BASE_URL = "http://localhost:3000";
 
-let userProfile = JSON.parse(localStorage.getItem("user"));
-
 export default {
   name: "Recommend",
   components: {
@@ -161,6 +159,7 @@ export default {
       this.loadingProgress = Swal.close();
     },
     preMenuRecommend(meal) {
+      let userProfile = JSON.parse(localStorage.getItem("user"));
       var caloriesPerPotion = userProfile.caloriesPerPotion;
       const payloads = {
         caloriesPerPotion: caloriesPerPotion,
