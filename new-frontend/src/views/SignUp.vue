@@ -14,7 +14,25 @@
             <div class="col-sm-12">
               <div class="card shadow border-0 mb-5 bg-lightorange">
                 <div class="card-body">
-                  <form>
+                  <form @submit="preSignUp">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div
+                          class="alert alert-danger alert-dismissible fade show"
+                          role="alert"
+                          v-if="signup.msgAlert"
+                        >
+                          {{ signup.msgAlert }}
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"
+                            @click="signup.msgAlert = ''"
+                          ></button>
+                        </div>
+                      </div>
+                    </div>
                     <div class="row">
                       <div class="col-sm-4">
                         <div class="mb-3 row text-left">
@@ -28,6 +46,7 @@
                               type="text"
                               class="form-control"
                               id="inputUsername"
+                              v-model="signup.inputUsername"
                             />
                           </div>
                         </div>
@@ -44,6 +63,7 @@
                               type="text"
                               class="form-control"
                               id="inputFirstname"
+                              v-model="signup.inputFirstname"
                             />
                           </div>
                         </div>
@@ -60,6 +80,7 @@
                               type="text"
                               class="form-control"
                               id="inputLastname"
+                              v-model="signup.inputLastname"
                             />
                           </div>
                         </div>
@@ -75,9 +96,10 @@
                           >
                           <div class="col-sm-6">
                             <input
-                              type="text"
+                              type="password"
                               class="form-control"
                               id="inputPassword"
+                              v-model="signup.inputPassword"
                             />
                           </div>
                         </div>
@@ -90,10 +112,14 @@
                             ><b>เพศ*:</b></label
                           >
                           <div class="col-sm-6">
-                            <select id="inputGender" class="form-select">
-                              <option selected>กรุณาเลือก...</option>
-                              <option>ชาย</option>
-                              <option>หญิง</option>
+                            <select
+                              id="inputGender"
+                              class="form-select"
+                              v-model="signup.inputGender"
+                            >
+                              <option selected value="">กรุณาเลือก...</option>
+                              <option value="ชาย">ชาย</option>
+                              <option value="หญิง">หญิง</option>
                             </select>
                           </div>
                         </div>
@@ -111,6 +137,7 @@
                               class="form-control"
                               id="inputWeight"
                               min="0"
+                              v-model="signup.inputWeight"
                             />
                           </div>
                         </div>
@@ -126,9 +153,10 @@
                           >
                           <div class="col-sm-6">
                             <input
-                              type="text"
+                              type="password"
                               class="form-control"
                               id="inputConfirmPassword"
+                              v-model="signup.inputConfirmPassword"
                             />
                           </div>
                         </div>
@@ -141,7 +169,12 @@
                             ><b>วันเกิด*:</b></label
                           >
                           <div class="col-sm-6 mt-1">
-                            <VueDatePicker id="inputBirthDate" v-model="birthdayDate" format="DD/MM/YYYY" placeholder="กรุณาเลือกวันเกิด" />
+                            <VueDatePicker
+                              id="inputBirthDate"
+                              v-model="signup.inputBirthday"
+                              format="DD/MM/YYYY"
+                              placeholder="กรุณาเลือกวันเกิด"
+                            />
                           </div>
                         </div>
                       </div>
@@ -157,6 +190,7 @@
                               type="number"
                               class="form-control"
                               id="inputHeight"
+                              v-model="signup.inputHeight"
                             />
                           </div>
                         </div>
@@ -172,9 +206,10 @@
                           >
                           <div class="col-sm-6">
                             <input
-                              type="text"
+                              type="email"
                               class="form-control"
                               id="inputEmail"
+                              v-model="signup.inputEmail"
                             />
                           </div>
                         </div>
@@ -187,11 +222,15 @@
                             ><b>ศาสนา*:</b></label
                           >
                           <div class="col-sm-6">
-                            <select id="inputReligion" class="form-select">
-                              <option selected>กรุณาเลือก...</option>
-                              <option>พุทธ</option>
-                              <option>คริสต์</option>
-                              <option>อิสลาม</option>
+                            <select
+                              id="inputReligion"
+                              class="form-select"
+                              v-model="signup.inputReligion"
+                            >
+                              <option selected value="">กรุณาเลือก...</option>
+                              <option value="พุทธ">พุทธ</option>
+                              <option value="คริสต์">คริสต์</option>
+                              <option value="อิสลาม">อิสลาม</option>
                             </select>
                           </div>
                         </div>
@@ -209,6 +248,7 @@
                               class="form-control"
                               id="inputActPerWeek"
                               min="0"
+                              v-model="signup.inputActPerWeek"
                             />
                           </div>
                         </div>
@@ -225,7 +265,7 @@
                         <div class="row">
                           <div class="col-sm-6 ms-auto text-right mb-2">
                             <button
-                              type="button"
+                              type="submit"
                               class="btn btn-primary col-sm-12 col-12"
                             >
                               สมัครสมาชิก
@@ -258,24 +298,125 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 
-import { VueDatePicker } from '@mathieustan/vue-datepicker';
-import '@mathieustan/vue-datepicker/dist/vue-datepicker.min.css';
-import moment from 'moment'
+import Swal from "sweetalert2";
+import { VueDatePicker } from "@mathieustan/vue-datepicker";
+import "@mathieustan/vue-datepicker/dist/vue-datepicker.min.css";
+
+import axios from "axios";
+import router from "../router";
+
+const BASE_URL = "http://localhost:3000";
 
 export default {
   name: "SignUp",
   components: {
     Navbar,
-    VueDatePicker
+    VueDatePicker,
   },
   data: () => {
     return {
-      birthdayDate: null,
-    }
+      signup: {
+        inputUsername: "",
+        inputPassword: "",
+        inputConfirmPassword: "",
+        inputEmail: "",
+        inputFirstname: "",
+        inputLastname: "",
+        inputGender: "",
+        inputWeight: "",
+        inputHeight: "",
+        inputBirthday: null,
+        inputReligion: "",
+        inputActPerWeek: "",
+        msgAlert: "",
+      },
+    };
   },
   methods: {
-    birthDayFormatter() {
-      return moment(this.birthdayDate, "yyyy-MM-dd").format("DD/MM/YYYYY");
+    dialogSuccess(msg) {
+      Swal.fire({
+        title: "แจ้งเตือน",
+        text: msg,
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "ตกลง",
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push({ name: "SignIn" });
+        }
+      });
+    },
+    preSignUp(evt) {
+      evt.preventDefault();
+      var username = this.signup.inputUsername;
+      var password = this.signup.inputPassword;
+      var confirmPassword = this.signup.inputConfirmPassword;
+      var email = this.signup.inputEmail;
+      var firstname = this.signup.inputFirstname;
+      var lastname = this.signup.inputLastname;
+      var gender = this.signup.inputGender;
+      var weight = this.signup.inputWeight;
+      var height = this.signup.inputHeight;
+      var birthday = this.signup.inputBirthday;
+      var religion = this.signup.inputReligion;
+      var actPerWeek = this.signup.inputActPerWeek;
+
+      if (
+        username == "" ||
+        password == "" ||
+        confirmPassword == "" ||
+        email == "" ||
+        firstname == "" ||
+        lastname == "" ||
+        gender == "" ||
+        weight == "" ||
+        height == "" ||
+        birthday == "" ||
+        religion == "" ||
+        actPerWeek == ""
+      ) {
+        this.signup.msgAlert = "กรุณากรอกข้อมูลให้ครบถ้วน";
+      } else if (password != confirmPassword) {
+        this.signup.msgAlert = "กรุณากรอกรหัสผ่านให้ตรงกัน";
+      } else {
+        const payloads = {
+          username: username,
+          password: password,
+          confirmPassword: confirmPassword,
+          email: email,
+          firstname: firstname,
+          lastname: lastname,
+          gender: gender,
+          weight: weight,
+          height: height,
+          birthday: birthday,
+          religion: religion,
+          actPerWeek: actPerWeek,
+        };
+        this.signup.msgAlert = ''
+        this.signUp(payloads);
+      }
+    },
+    signUp(payloads) {
+      const path = BASE_URL + "/signup";
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      axios
+        .post(path, payloads, { headers: headers })
+        .then((res) => {
+          if (res.data.isError) {
+            this.signup.msgAlert = res.data.message;
+          } else {
+            this.signup.msgAlert = null;
+            this.dialogSuccess(res.data.message)
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

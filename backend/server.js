@@ -115,7 +115,7 @@ app.post('/signup', (req, res) => {
             // Variable
             let username = req.body.username
             let password = req.body.password
-            let confirm_password = req.body.confirm_password
+            let confirmPassword = req.body.confirmPassword
             let email = req.body.email
             let firstname = req.body.firstname
             let lastname = req.body.lastname
@@ -135,11 +135,11 @@ app.post('/signup', (req, res) => {
                 return res.status(200).json({ "message": "กรุณากรอกรหัสผ่าน" })
             }
 
-            if (confirm_password == null || confirm_password == '') {
+            if (confirmPassword == null || confirmPassword == '') {
                 return res.status(200).json({ "message": "กรุณากรอกยืนยันรหัสผ่าน" })
             }
 
-            if (password != confirm_password) {
+            if (password != confirmPassword) {
                 return res.status(200).json({ "message": "กรุณากรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน" })
             }
 
@@ -189,9 +189,9 @@ app.post('/signup', (req, res) => {
             // คำนวณ BMR
             // เพศชาย
             let bmr
-            if (gender.toUpperCase() == "MALE") {
+            if (gender.toUpperCase() == "ชาย") {
                 bmr = 66 + (13.7 * parseInt(weight)) + (5 * parseInt(height)) - (6.8 * age)
-            } else if (gender.toUpperCase() == "FEMALE") { // เพศหญิง
+            } else if (gender.toUpperCase() == "หญิง") { // เพศหญิง
                 bmr = 665 + (9.6 * parseInt(weight)) + (1.8 * parseInt(height)) - (4.7 * age)
             }
 
@@ -222,34 +222,21 @@ app.post('/signup', (req, res) => {
                         return res.status(500).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
                     }
 
-                    // Prepare insert users
-                    let birthDate = birthdaySplit[2] + '-' + birthdaySplit[1] + '-' + birthdaySplit[0]
-                    var sqlInsertUsers = 'INSERT INTO users (Username, Password, Name, Surname, Birthdate, Gender) VALUES (?, ?, ?, ?, ?, ?)'
-                    connection.query(sqlInsertUsers, [username, password, firstname, lastname, birthDate, gender], function (err) {
+                    var sqlCheckDupUser = 'SELECT USERNAME FROM users WHERE USERNAME = ?'
+                    connection.query(sqlCheckDupUser, [username], function (err, results) {
                         if (err) {
                             connection.rollback(function () {
-                                console.log(`[${NAME}][API SIGNUP] SQL INSERT ERROR -> ${err}`);
+                                console.log(`[${NAME}][API SIGNUP] sqlCheckDupUser ERROR -> ${err}`);
                                 return res.status(500).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
                             })
                         }
 
-                        var sqlSelectUserId = 'SELECT UsersID FROM users WHERE Username = ?'
-                        connection.query(sqlSelectUserId, [username], function (err, results) {
-                            if (err) {
-                                connection.rollback(function () {
-                                    console.log(`[${NAME}][API SIGNUP] SQL INSERT ERROR -> ${err}`);
-                                    return res.status(500).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
-                                })
-                            }
-
-                            if (!results.length) {
-                                return res.status(404).json({ "isError": false, "message": "ไม่พบข้อมูลผู้ใช้งาน" })
-                            }
-
-                            // Prepare insert users_update_info
-                            let userId = results[0].UsersID
-                            var sqlInsertUsersInfo = 'INSERT INTO users_update_info (UsersID, Weight, Height, BMR, TDEE, ActPerWeek) VALUES (?, ?, ?, ?, ?, ?)'
-                            connection.query(sqlInsertUsersInfo, [userId, weight, height, bmr, tdee, actPerWeek], function (err) {
+                        if (results.length > 0) {
+                            return res.status(200).json({ "isError": true, "message": "ชื่อผู้ใช้งานซ้ำ กรุณาเปลี่ยนชื่อผู้ใช้งานใหม่" })
+                        } else {
+                            // Prepare insert users
+                            var sqlInsertUsers = 'INSERT INTO users (Username, Password, Name, Surname, Birthdate, Gender) VALUES (?, ?, ?, ?, ?, ?)'
+                            connection.query(sqlInsertUsers, [username, password, firstname, lastname, birthday, gender], function (err) {
                                 if (err) {
                                     connection.rollback(function () {
                                         console.log(`[${NAME}][API SIGNUP] SQL INSERT ERROR -> ${err}`);
@@ -257,20 +244,46 @@ app.post('/signup', (req, res) => {
                                     })
                                 }
 
-                                connection.commit(function (err) {
+                                var sqlSelectUserId = 'SELECT UsersID FROM users WHERE Username = ?'
+                                connection.query(sqlSelectUserId, [username], function (err, results) {
                                     if (err) {
                                         connection.rollback(function () {
-                                            console.log(`[${NAME}][API SIGNUP] SQL COMMIT ERROR -> ${err.message}`);
+                                            console.log(`[${NAME}][API SIGNUP] SQL INSERT ERROR -> ${err}`);
                                             return res.status(500).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
                                         })
                                     }
 
-                                    console.log(`[${NAME}][API SIGNUP] -> "SIGN UP SUCCESS"`);
+                                    if (!results.length) {
+                                        return res.status(404).json({ "isError": false, "message": "ไม่พบข้อมูลผู้ใช้งาน" })
+                                    }
 
-                                    return res.status(200).json({ "isError": false, "message": "สมัครสมาชิกสำเร็จ" })
+                                    // Prepare insert users_update_info
+                                    var userId = results[0].UsersID
+                                    var sqlInsertUsersInfo = 'INSERT INTO users_update_info (UsersID, Weight, Height, BMR, TDEE, ActPerWeek) VALUES (?, ?, ?, ?, ?, ?)'
+                                    connection.query(sqlInsertUsersInfo, [userId, weight, height, bmr, tdee, actPerWeek], function (err) {
+                                        if (err) {
+                                            connection.rollback(function () {
+                                                console.log(`[${NAME}][API SIGNUP] SQL INSERT users_update_info ERROR -> ${err}`);
+                                                return res.status(200).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                                            })
+                                        }
+
+                                        connection.commit(function (err) {
+                                            if (err) {
+                                                connection.rollback(function () {
+                                                    console.log(`[${NAME}][API SIGNUP] SQL COMMIT ERROR -> ${err.message}`);
+                                                    return res.status(500).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                                                })
+                                            }
+
+                                            console.log(`[${NAME}][API SIGNUP] -> "SIGN UP SUCCESS"`);
+
+                                            return res.status(200).json({ "isError": false, "message": "สมัครสมาชิกสำเร็จ" })
+                                        })
+                                    })
                                 })
                             })
-                        })
+                        }
                     })
                 })
             })
