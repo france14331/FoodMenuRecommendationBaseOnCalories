@@ -1,8 +1,8 @@
 <template>
   <div class="sign-in">
     <Navbar />
-    <div class="container my-5">
-      <div class="row">
+    <div class="container h-100">
+      <div class="row align-items-center" style="height: 90vh">
         <div class="col-sm-12">
           <div class="row">
             <div class="col-sm-6 ms-auto me-auto">

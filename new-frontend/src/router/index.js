@@ -4,10 +4,20 @@ import Home from '../views/Home.vue'
 import SignUp from '@/views/SignUp.vue'
 import SignIn from '@/views/SignIn.vue'
 import Main from '@/views/Main.vue'
+import PageNotFound from '@/views/PageNotFound.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '*',
+    name: 'PageNotFound',
+    component: PageNotFound,
+    meta: {
+      requireUser: false,
+      requiresAuth: false
+    }
+  },
   {
     path: '/',
     name: 'Home',
@@ -75,19 +85,18 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    
-      if (!to.matched.some(record => record.meta.requireUser)) {
-        if (user) {
-          next({
-            path: '/main',
-            params: { nextUrl: to.fullPath }
-          })
-        } else {
-          next()
-        }
+    if (!to.matched.some(record => record.meta.requireUser)) {
+      if (user) {
+        next({
+          path: '/main',
+          params: { nextUrl: to.fullPath }
+        })
       } else {
         next()
       }
+    } else {
+      next()
+    }
   }
 })
 
