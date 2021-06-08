@@ -58,7 +58,11 @@ const routes = [
   {
     path: '/recommend',
     name: 'Recommend',
-    component: Recommend
+    component: Recommend,
+    meta: {
+      requireUser: true,
+      requiresAuth: true
+    }
   }
 ]
 

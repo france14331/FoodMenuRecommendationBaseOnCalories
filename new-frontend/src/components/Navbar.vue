@@ -5,12 +5,13 @@
         <router-link class="navbar-brand" to="/">
           FOOD RECCOMENDATION
         </router-link>
+
         <button
           class="navbar-toggler"
           type="button"
-          data-toggle="collapse"
-          data-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarMainMenu"
+          aria-controls="navbarMainMenu"
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
@@ -18,7 +19,7 @@
         </button>
         <div
           class="collapse navbar-collapse right justify-content-end"
-          id="navbarNavAltMarkup"
+          id="navbarMainMenu"
         >
           <div class="navbar-nav" v-if="user === null">
             <router-link class="nav-item nav-link" to="/signup"
@@ -34,7 +35,7 @@
               หน้าแรก
             </router-link>
             <a class="nav-link disabled"> | </a>
-            <router-link class="nav-item nav-link" to="/main">
+            <router-link class="nav-item nav-link" to="/recommend">
               แนะนำเมนู
             </router-link>
             <a class="nav-link disabled"> | </a>

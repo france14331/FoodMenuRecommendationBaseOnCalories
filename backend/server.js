@@ -57,7 +57,7 @@ app.post('/signin', (req, res) => {
             if (req.body.username == null || req.body.password == null) {
                 return res.status(500).json({ "isError": true, "message": "กรุณากรอกชื่อผู้ใช้งานและรหัสผ่าน" })
             } else {
-                var sqlCheckSignIn = 'SELECT USERSID, USERNAME, NAME, SURNAME FROM users WHERE USERNAME = ? AND PASSWORD = ?'
+                var sqlCheckSignIn = 'SELECT u.UsersID, u.Username, u.Name, u.Surname, u.Birthdate, u.Gender, uinfo.Weight, uinfo.Height, uinfo.BMR, uinfo.TDEE, uinfo.ActPerWeek FROM users u INNER JOIN users_update_info uinfo on (u.UsersId = uinfo.UsersId) WHERE u.USERNAME = ? AND u.PASSWORD = ?'
                 connection.query(sqlCheckSignIn, [req.body.username, req.body.password], function (err, results) {
                     if (err) {
                         console.log(`[${NAME}] sqlCheckSignIn Error -> ${err}`)
@@ -69,18 +69,44 @@ app.post('/signin', (req, res) => {
                     }
 
                     const payload = {
-                        _id: results[0].USERSID,
-                        username: results[0].USERNAME,
-                        fullname: results[0].NAME + ' ' + results[0].SURNAME,
+                        _id: results[0].UsersID,
+                        username: results[0].Username,
+                        fullname: results[0].Name + ' ' + results[0].Surname,
                         iat: new Date().getTime(), //มาจากคำว่า issued at time (สร้างเมื่อ)
                         exp: Math.floor(Date.now() / 1000) + (60 * 60)
                     };
+
+                    // คำนวณอายุ
+                    let birthday = results[0].Birthdate
+                    let ageSplit = moment(birthday, "YYYY-MM-DD").fromNow(true).split(' ')
+                    let age = parseInt(ageSplit[0])
+
+                    // คำนวณแคลลอรี่ต่อมื้อ
+                    let tdee = results[0].TDEE
+                    let calTDEE = tdee - 300
+                    let caloriesPerPotion = parseInt(Math.round(calTDEE / 3))
 
                     jwt.sign(payload, "SECRET", function (err, token) {
                         if (err) {
                             return res.status(401).json({ "accesstoken": false, "message": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" })
                         } else {
-                            return res.status(200).json({ "accesstoken": token, "user_profile": { "id": results[0].USERSID, "username": results[0].USERNAME, "fullname": results[0].NAME + ' ' + results[0].SURNAME }, "message": "เข้าสู่ระบบสำเร็จ" })
+                            return res.status(200).json({
+                                "accesstoken": token,
+                                "user_profile": {
+                                    "id": results[0].UsersID,
+                                    "username": results[0].Username,
+                                    "fullname": results[0].Name + ' ' + results[0].Surname,
+                                    "birthday": moment(results[0].Birthdate).format('DD/MM/YYYY'),
+                                    "gender": results[0].Gender,
+                                    "weight": results[0].Weight,
+                                    "height": results[0].Height,
+                                    "bmr": results[0].BMR,
+                                    "tdee": results[0].TDEE,
+                                    "actPerWeek": results[0].ActPerWeek,
+                                    "age": age,
+                                    "caloriesPerPotion": caloriesPerPotion
+                                }, "message": "เข้าสู่ระบบสำเร็จ"
+                            })
                         }
                     })
                 })
@@ -371,6 +397,16 @@ app.get('/user/:userid/info', (req, res) => {
                 return res.status(200).json({ "isError": true, "message": "ไม่พบข้อมูลผู้ใช้งาน" })
             }
 
+            // คำนวณอายุ
+            let birthday = results[0].Birthdate
+            let ageSplit = moment(birthday, "YYYY-MM-DD").fromNow(true).split(' ')
+            let age = parseInt(ageSplit[0])
+
+            // คำนวณแคลลอรี่ต่อมื้อ
+            let tdee = results[0].TDEE
+            let calTDEE = tdee - 300
+            let caloriesPerPotion = parseInt(Math.round(calTDEE / 3))
+
             return res.status(200).json({
                 "user_profile": {
                     "id": results[0].UsersID,
@@ -382,7 +418,9 @@ app.get('/user/:userid/info', (req, res) => {
                     "height": results[0].Height,
                     "bmr": results[0].BMR,
                     "tdee": results[0].TDEE,
-                    "actPerWeek": results[0].ActPerWeek
+                    "actPerWeek": results[0].ActPerWeek,
+                    "age": age,
+                    "caloriesPerPotion": caloriesPerPotion
                 },
                 "isError": true, "message": "สำเร็จ"
             })
