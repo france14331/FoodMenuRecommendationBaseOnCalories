@@ -16,7 +16,7 @@
                 <div class="col-sm-4 mb-3">
                   <div class="card bg-lightorange shadow border-0">
                     <div class="card-body">
-                      <h3 class="card-title">มื้อเย็น</h3>
+                      <h3 class="card-title">มื้อเช้า</h3>
                       <div class="row">
                         <div class="col-sm-12">
                           <p v-show="menuRecommend.breakfast.name"><b>ชื่อเมนู</b>
@@ -26,6 +26,12 @@
                             <b>พลังงาน</b>
                             {{ menuRecommend.breakfast.calories }}
                             <b>แคลลอรี่</b>
+                          </p>
+                          <p v-show="menuRecommend.breakfast.restaurant"><b>โรงอาหาร</b>
+                            {{ menuRecommend.breakfast.restaurant }}
+                          </p>
+                          <p v-show="menuRecommend.breakfast.nameRestaurant"><b>ร้าน</b>
+                            {{ menuRecommend.breakfast.nameRestaurant }}
                           </p>
                         </div>
                       </div>
@@ -46,7 +52,7 @@
                 <div class="col-sm-4 mb-3">
                   <div class="card bg-lightorange shadow border-0">
                     <div class="card-body">
-                      <h3 class="card-title">มื้อเย็น</h3>
+                      <h3 class="card-title">มื้อกลางวัน</h3>
                       <div class="row">
                         <div class="col-sm-12">
                           <p v-show="menuRecommend.lunch.name"><b>ชื่อเมนู</b>
@@ -56,6 +62,12 @@
                             <b>พลังงาน</b>
                             {{ menuRecommend.lunch.calories }}
                             <b>แคลลอรี่</b>
+                          </p>
+                          <p v-show="menuRecommend.lunch.restaurant"><b>โรงอาหาร</b>
+                            {{ menuRecommend.lunch.restaurant }}
+                          </p>
+                          <p v-show="menuRecommend.lunch.nameRestaurant"><b>ร้าน</b>
+                            {{ menuRecommend.lunch.nameRestaurant }}
                           </p>
                         </div>
                       </div>
@@ -86,6 +98,12 @@
                             <b>พลังงาน</b>
                             {{ menuRecommend.dinner.calories }}
                             <b>แคลลอรี่</b>
+                          </p>
+                          <p v-show="menuRecommend.dinner.restaurant"><b>โรงอาหาร</b>
+                            {{ menuRecommend.dinner.restaurant }}
+                          </p>
+                          <p v-show="menuRecommend.dinner.nameRestaurant"><b>ร้าน</b>
+                            {{ menuRecommend.dinner.nameRestaurant }}
                           </p>
                         </div>
                       </div>
@@ -132,14 +150,20 @@ export default {
         breakfast: {
           name: "",
           calories: 0,
+          restaurant: "",
+          nameRestaurant: "",
         },
         lunch: {
           name: "",
           calories: 0,
+          restaurant: "",
+          nameRestaurant: "",
         },
         dinner: {
           name: "",
           calories: 0,
+          restaurant: "",
+          nameRestaurant: "",
         },
       },
     };
@@ -190,16 +214,22 @@ export default {
             if (meal == "breakfast") {
               this.menuRecommend.breakfast.name = res.data.menuRecommend.name;
               this.menuRecommend.breakfast.calories = res.data.menuRecommend.calories;
+              this.menuRecommend.breakfast.restaurant = res.data.menuRecommend.restaurant;
+              this.menuRecommend.breakfast.nameRestaurant = res.data.menuRecommend.nameRestaurant;
             }
 
             if (meal == "lunch") {
               this.menuRecommend.lunch.name = res.data.menuRecommend.name;
               this.menuRecommend.lunch.calories = res.data.menuRecommend.calories;
+              this.menuRecommend.lunch.restaurant = res.data.menuRecommend.restaurant;
+              this.menuRecommend.lunch.nameRestaurant = res.data.menuRecommend.nameRestaurant;
             }
 
             if (meal == "dinner") {
               this.menuRecommend.dinner.name = res.data.menuRecommend.name;
               this.menuRecommend.dinner.calories = res.data.menuRecommend.calories;
+              this.menuRecommend.dinner.restaurant = res.data.menuRecommend.restaurant;
+              this.menuRecommend.dinner.nameRestaurant = res.data.menuRecommend.nameRestaurant;
             }
           }
         })

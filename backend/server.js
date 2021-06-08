@@ -333,7 +333,7 @@ app.post('/menu/recommend', (req, res) => {
             let caloriesPerPotion = req.body.caloriesPerPotion
 
             // แสดงเมนูแนะนำ
-            var sqlGetMenuRecommend = "SELECT DISHSID, DISH, CALORIES FROM dishs WHERE CALORIES <= ?"
+            var sqlGetMenuRecommend = "SELECT dishs.DISHSID, dishs.DISH, dishs.CALORIES, restaurant.LOCATION, restaurant.NAME FROM dishs INNER JOIN restaurant_dishs ON (dishs.DishsID = restaurant_dishs.DishsID) INNER JOIN restaurant ON (restaurant_dishs.RestaurantID = restaurant.RestaurantID) WHERE CALORIES <= ?"
             connection.query(sqlGetMenuRecommend, [caloriesPerPotion], function (err, results) {
                 if (err) {
                     console.log(`[${NAME}] sqlGetMenuRecommend Error -> ${err}`)
@@ -352,7 +352,9 @@ app.post('/menu/recommend', (req, res) => {
                     "menuRecommend": {
                         "id": results[randomMenu].DISHSID,
                         "name": results[randomMenu].DISH,
-                        "calories": results[randomMenu].CALORIES
+                        "calories": results[randomMenu].CALORIES,
+                        "restaurant": results[randomMenu].LOCATION,
+                        "nameRestaurant": results[randomMenu].NAME
                     }
                 })
             })
