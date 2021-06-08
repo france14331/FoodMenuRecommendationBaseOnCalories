@@ -157,6 +157,7 @@ export default {
   },
   data: () => {
     return {
+      loadingProgress: null,
       userProfile: {
         fullname: "",
         gender: "",

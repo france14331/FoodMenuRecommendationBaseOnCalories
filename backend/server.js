@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 
 // MySQL Pool Connection
 var mysqlPool = MySQL.createPool({
-    connectionLimit: 10,
+    connectionLimit: 1000,
     host: '35.238.114.100',
     port: '3306',
     user: 'root',
@@ -321,7 +321,7 @@ app.post('/signup', (req, res) => {
 // API MENU RECOMMEND
 // Format JSON //
 // {
-//     "users_id": "5"
+//     "caloriesPerPotion": "5"
 // }
 // Format JSON //
 app.post('/menu/recommend', (req, res) => {
@@ -330,42 +330,30 @@ app.post('/menu/recommend', (req, res) => {
             console.log(`[${NAME}] Error -> ${err.message}`);
             return res.status(500).json({ "isError": true, "message": "ไม่สามารถเชื่อมต่อฐานข้อมูลได้" })
         } else {
-            let userId = req.body.users_id
+            let caloriesPerPotion = req.body.caloriesPerPotion
 
-            // Valiadate
-
-            // คำนวณแคลลอรี่ต่อมื้อ
-            var sqlGetTDEE = "SELECT TDEE FROM users_update_info WHERE UsersID = ?"
-            connection.query(sqlGetTDEE, [userId], function (err, results) {
+            // แสดงเมนูแนะนำ
+            var sqlGetMenuRecommend = "SELECT DISHSID, DISH, CALORIES FROM dishs WHERE CALORIES <= ?"
+            connection.query(sqlGetMenuRecommend, [caloriesPerPotion], function (err, results) {
                 if (err) {
-                    console.log(`[${NAME}] sqlGetTDEE Error -> ${err}`)
-                    return res.status(500).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                    console.log(`[${NAME}] sqlGetMenuRecommend Error -> ${err}`)
+                    return res.status(200).json({ "isError": false, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
                 }
 
                 if (!results.length) {
-                    return res.status(404).json({ "isError": true, "message": "ไม่พบข้อมูล TDEE ของผู้ใช้งาน" })
+                    return res.status(200).json({ "isError": true, "message": "ไม่พบเมนูแนะนำสำหรับผู้ใช้งาน" })
                 }
 
-                let tdee = results[0].TDEE
-                let calTDEE = tdee - 300
-                let caloriesPerPotion = parseInt(Math.round(calTDEE / 3))
+                // สุ่มเมนูสำหรับแนะนำ
+                let randomMenu = Math.floor(Math.random() * results.length)
 
-                // แสดงเมนูแนะนำ
-                var sqlGetMenuRecommend = "SELECT DISHSID, DISH CALORIES FROM dishs WHERE CALORIES <= ?"
-                connection.query(sqlGetMenuRecommend, [caloriesPerPotion], function (err, results) {
-                    if (err) {
-                        console.log(`[${NAME}] sqlGetMenuRecommend Error -> ${err}`)
-                        return res.status(500).json({ "isError": false, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                return res.status(200).json({
+                    "isError": false,
+                    "menuRecommend": {
+                        "id": results[randomMenu].DISHSID,
+                        "name": results[randomMenu].DISH,
+                        "calories": results[randomMenu].CALORIES
                     }
-
-                    if (!results.length) {
-                        return res.status(404).json({ "isError": true, "message": "ไม่พบเมนูแนะนำสำหรับผู้ใช้งาน" })
-                    }
-
-                    // สุ่มเมนูสำหรับแนะนำ
-                    let randomMenu = Math.floor(Math.random() * results.length)
-
-                    return res.status(200).json({ "isError": false, "caloriesPerPotion": caloriesPerPotion, "menuRecommend": results[randomMenu] })
                 })
             })
         }
