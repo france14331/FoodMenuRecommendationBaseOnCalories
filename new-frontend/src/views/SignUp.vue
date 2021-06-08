@@ -1,8 +1,8 @@
 <template>
   <div class="sign-up">
     <Navbar />
-    <div class="container">
-      <div class="row mt-2 mb-2">
+    <div class="container h-100">
+      <div class="row mt-2 align-items-center" style="height: 90vh">
         <div class="col-sm-12">
           <div class="row">
             <div class="col-sm-12">
@@ -315,6 +315,7 @@ export default {
   },
   data: () => {
     return {
+      loadingProgress: null,
       signup: {
         inputUsername: "",
         inputPassword: "",
@@ -333,6 +334,19 @@ export default {
     };
   },
   methods: {
+    showLoading() {
+      this.loadingProgress = Swal.fire({
+        text: "Loading",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+    },
+    hideLoading() {
+      this.loadingProgress = Swal.close()
+    },
     dialogSuccess(msg) {
       Swal.fire({
         title: "แจ้งเตือน",
@@ -350,6 +364,9 @@ export default {
     },
     preSignUp(evt) {
       evt.preventDefault();
+
+      this.showLoading();
+
       var username = this.signup.inputUsername;
       var password = this.signup.inputPassword;
       var confirmPassword = this.signup.inputConfirmPassword;
@@ -377,10 +394,16 @@ export default {
         religion == "" ||
         actPerWeek == ""
       ) {
+        this.hideLoading()
+        
         this.signup.msgAlert = "กรุณากรอกข้อมูลให้ครบถ้วน";
       } else if (password != confirmPassword) {
+        this.hideLoading()
+
         this.signup.msgAlert = "กรุณากรอกรหัสผ่านให้ตรงกัน";
       } else {
+        this.hideLoading()
+
         const payloads = {
           username: username,
           password: password,
@@ -400,6 +423,8 @@ export default {
       }
     },
     signUp(payloads) {
+      this.showLoading();
+
       const path = BASE_URL + "/signup";
       const headers = {
         "Content-Type": "application/json",
@@ -407,6 +432,8 @@ export default {
       axios
         .post(path, payloads, { headers: headers })
         .then((res) => {
+          this.hideLoading()
+
           if (res.data.isError) {
             this.signup.msgAlert = res.data.message;
           } else {
@@ -416,6 +443,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          this.hideLoading()
         });
     },
   },

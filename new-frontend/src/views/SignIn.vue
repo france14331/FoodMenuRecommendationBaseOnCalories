@@ -1,8 +1,8 @@
 <template>
   <div class="sign-in">
     <Navbar />
-    <div class="container my-5">
-      <div class="row">
+    <div class="container h-100">
+      <div class="row align-items-center" style="height: 90vh">
         <div class="col-sm-12">
           <div class="row">
             <div class="col-sm-6 ms-auto me-auto">
@@ -108,6 +108,7 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 
+import Swal from "sweetalert2";
 import axios from "axios";
 import router from "../router";
 
@@ -118,8 +119,26 @@ export default {
   components: {
     Navbar,
   },
+  created() {
+    // const Toast = Swal.mixin({
+    //   toast: true,
+    //   position: "top-end",
+    //   showConfirmButton: false,
+    //   timer: 3000,
+    //   timerProgressBar: true,
+    //   didOpen: (toast) => {
+    //     toast.addEventListener("mouseenter", Swal.stopTimer);
+    //     toast.addEventListener("mouseleave", Swal.resumeTimer);
+    //   },
+    // });
+    // Toast.fire({
+    //   icon: "success",
+    //   title: "Signed in successfully",
+    // });
+  },
   data() {
     return {
+      loadingProgress: null,
       signin: {
         inputUsername: "",
         inputPassword: "",
@@ -128,13 +147,33 @@ export default {
     };
   },
   methods: {
+    showLoading() {
+      this.loadingProgress = Swal.fire({
+        text: "Loading",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+    },
+    hideLoading() {
+      this.loadingProgress = Swal.close()
+    },
     preSignIn(evt) {
       evt.preventDefault();
+
+      this.showLoading();
+
       var username = this.signin.inputUsername;
       var password = this.signin.inputPassword;
       if (username == "" || password == "") {
+        this.hideLoading()
+
         this.signin.msgAlert = "กรุณากรอกชื่อผู้ใช้งานหรือรหัสผ่านให้ครบถ้วน";
       } else {
+        this.hideLoading()
+
         const payloads = {
           username: username,
           password: password,
@@ -143,6 +182,8 @@ export default {
       }
     },
     signIn(payloads) {
+      this.showLoading();
+
       const path = BASE_URL + "/signin";
       const headers = {
         "Content-Type": "application/json",
@@ -150,6 +191,7 @@ export default {
       axios
         .post(path, payloads, { headers: headers })
         .then((res) => {
+          this.hideLoading()
           if (res.data.isError) {
             this.signin.msgAlert = res.data.message;
           } else {
@@ -161,6 +203,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          this.hideLoading()
         });
     },
   },
