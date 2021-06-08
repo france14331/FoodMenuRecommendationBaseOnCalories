@@ -16,6 +16,10 @@
                     <div class="card">
                       <div class="card-body">
                         <h3 class="card-title">มื้อเช้า</h3>
+                        <p class="collapse" id="breakfast">ข้าวมันไก่</p>
+                        <button class= "btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#breakfast" aria-expanded="false" aria-controls="collapseExample">
+                          แนะนำ
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -23,6 +27,10 @@
                     <div class="card">
                       <div class="card-body">
                         <h3 class="card-title">มื้อกลางวัน</h3>
+                        <p class="collapse" id="lunch">ข้าวมันไก่</p>
+                        <button class= "btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#lunch" aria-expanded="false" aria-controls="collapseExample">
+                          แนะนำ
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -30,6 +38,10 @@
                     <div class="card">
                       <div class="card-body">
                         <h3 class="card-title">มื้อเย็น</h3>
+                        <p class="collapse" id="dinner">ข้าวมันไก่</p>
+                        <button class= "btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#dinner" aria-expanded="false" aria-controls="collapseExample">
+                          แนะนำ
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -48,4 +60,21 @@ export default {
   name: "Recommend",
   
 };
+
 </script>
+
+<style>
+
+.collapse {
+  &:not(.show) {
+    display: none;
+  }
+}
+
+.collapsing {
+  height: 0;
+  overflow: hidden;
+  @include transition($transition-collapse);
+}
+
+</style>
