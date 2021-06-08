@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import SignUp from '@/views/SignUp.vue'
 import SignIn from '@/views/SignIn.vue'
 import Main from '@/views/Main.vue'
+import Recommend from '@/views/Recommend.vue'
 
 Vue.use(VueRouter)
 
@@ -40,6 +41,11 @@ const routes = [
       requiresAuth: true
     }
   },
+  {
+    path: '/recommend',
+    name: 'Recommend',
+    component: Recommend
+  }
 ]
 
 const router = new VueRouter({
