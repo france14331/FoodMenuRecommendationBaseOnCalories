@@ -346,5 +346,55 @@ app.post('/menu/recommend', (req, res) => {
     })
 })
 
+// API GET USER INFO BY ID
+app.get('/user/:userid/info', (req, res) => {
+    let userId = req.params.userid;
+
+    if (isEmptyOrSpaces(userId)) {
+        return res.status(200).json({ "isError": true, "message": "ไม่พบข้อมูลผู้ใช้งาน" })
+    }
+
+    mysqlPool.getConnection(async function (err, connection) {
+        if (err) {
+            console.log(`[${NAME}] Error -> ${err.message}`);
+            return res.status(200).json({ "isError": true, "message": "ไม่สามารถเชื่อมต่อฐานข้อมูลได้" })
+        }
+
+        var sqlGetUserInfo = "SELECT u.UsersID, u.Username, u.Name, u.Surname, u.Birthdate, u.Gender, uinfo.Weight, uinfo.Height, uinfo.BMR, uinfo.TDEE, uinfo.ActPerWeek FROM users u INNER JOIN users_update_info uinfo on (u.UsersId = uinfo.UsersId) WHERE u.UsersId = ?"
+        connection.query(sqlGetUserInfo, [userId], function (err, results) {
+            if (err) {
+                console.log(`[${NAME}] sqlGetUserInfo Error -> ${err}`)
+                return res.status(200).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+            }
+
+            if (!results.length) {
+                return res.status(200).json({ "isError": true, "message": "ไม่พบข้อมูลผู้ใช้งาน" })
+            }
+
+            return res.status(200).json({
+                "user_profile": {
+                    "id": results[0].UsersID,
+                    "username": results[0].Username,
+                    "fullname": results[0].Name + ' ' + results[0].Surname,
+                    "birthday": moment(results[0].Birthdate).format('DD/MM/YYYY'),
+                    "gender": results[0].Gender,
+                    "weight": results[0].Weight,
+                    "height": results[0].Height,
+                    "bmr": results[0].BMR,
+                    "tdee": results[0].TDEE,
+                    "actPerWeek": results[0].ActPerWeek
+                },
+                "isError": true, "message": "สำเร็จ"
+            })
+        })
+    })
+})
+
+// Utils //
+function isEmptyOrSpaces(str) {
+    return str === null || str.match(/^ *$/) !== null;
+}
+// Utils //
+
 app.listen(PORT, HOST);
 console.log(`[${NAME}] Running on http://${HOST}:${PORT}`);
