@@ -13,6 +13,7 @@ const routes = [
     name: 'Home',
     component: Home,
     meta: {
+      requireUser: false,
       requiresAuth: false
     }
   },
@@ -21,6 +22,7 @@ const routes = [
     name: 'SignUp',
     component: SignUp,
     meta: {
+      requireUser: false,
       requiresAuth: false
     }
   },
@@ -29,6 +31,7 @@ const routes = [
     name: 'SignIn',
     component: SignIn,
     meta: {
+      requireUser: false,
       requiresAuth: false
     }
   },
@@ -37,6 +40,7 @@ const routes = [
     name: 'Main',
     component: Main,
     meta: {
+      requireUser: true,
       requiresAuth: true
     }
   },
@@ -48,6 +52,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  let user = JSON.parse(localStorage.getItem('user'))
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('token') == null) {
       next({
@@ -55,13 +61,33 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      let user = JSON.parse(localStorage.getItem('user'))
-      if (user) {
+      if (!to.matched.some(record => record.meta.requireUser)) {
+        if (user) {
+          next({
+            path: '/main',
+            params: { nextUrl: to.fullPath }
+          })
+        } else {
+          next()
+        }
+      } else {
         next()
       }
     }
   } else {
-    next()
+    
+      if (!to.matched.some(record => record.meta.requireUser)) {
+        if (user) {
+          next({
+            path: '/main',
+            params: { nextUrl: to.fullPath }
+          })
+        } else {
+          next()
+        }
+      } else {
+        next()
+      }
   }
 })
 
