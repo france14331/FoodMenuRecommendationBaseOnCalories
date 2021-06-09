@@ -68,7 +68,7 @@
                   </div>
                   <div class="row">
                     <div class="col-sm-6 ms-auto me-auto">
-                      <p><b>วันนี้ใช้พลังงานไป</b></p>
+                      <p><b>พลังงานที่ได้รับวันนี้</b></p>
                     </div>
                   </div>
                   <div class="row">

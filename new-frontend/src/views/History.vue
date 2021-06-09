@@ -164,7 +164,7 @@ export default {
             meal: "มื้อ",
             date: "วันที่",
             dishName: "ชื่อเมนู",
-            calories: "พลังงาน",
+            calories: "พลังงาน (แคลลอรี่)",
           },
           content: [
             {
