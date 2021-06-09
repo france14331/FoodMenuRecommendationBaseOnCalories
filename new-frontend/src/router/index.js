@@ -110,4 +110,11 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+const DEFAULT_TITLE = ".:: Food Recommendation ::.";
+router.afterEach((to) => {
+    Vue.nextTick(() => {
+        document.title = to.meta.title != undefined ? to.meta.title + " - " + DEFAULT_TITLE : DEFAULT_TITLE;
+    });
+});
+
 export default router

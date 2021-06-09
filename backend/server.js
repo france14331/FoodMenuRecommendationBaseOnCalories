@@ -559,7 +559,7 @@ app.get('/menu/recommend/:userid/today', (req, res) => {
             console.log(`[${NAME}] Error -> ${err.message}`);
             return res.status(500).json({ "isError": true, "message": "ไม่สามารถเชื่อมต่อฐานข้อมูลได้" })
         } else {
-            var sqlGetToDayMenuRecommend = "SELECT UsersID, Meal FROM recommend_meal WHERE UsersID = ? AND Date = ?"
+            var sqlGetToDayMenuRecommend = "SELECT UsersID, Meal, Dish, Calories FROM recommend_meal WHERE UsersID = ? AND Date = ?"
             connection.query(sqlGetToDayMenuRecommend, [userId, moment().format("YYYY-MM-DD")], function (err, results) {
                 if (err) {
                     console.log(`[${NAME}][API GET TODAY MENU RECOMMEND] sqlInsertMenuRecommend ERROR -> ${err}`);
