@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 // MySQL Pool Connection
 var mysqlPool = MySQL.createPool({
     connectionLimit: 1000,
-    host: '34.136.96.252',
+    host: '104.154.128.225',
     port: '3306',
     user: 'root',
     password: '1234',
@@ -570,6 +570,38 @@ app.get('/menu/recommend/:userid/today', (req, res) => {
                     return res.status(200).json({
                         "isError": false,
                         "recommendToday": results
+                    })
+                }
+            })
+        }
+    })
+})
+
+// API GET MENU RECOMMEND HISTORY
+app.get('/menu/recommend/:userid/history', (req, res) => {
+    let userId = req.params.userid;
+
+    // Validate
+    if (isEmptyOrSpaces(userId)) {
+        return res.status(200).json({ "isError": true, "message": "ไม่พบข้อมูลผู้ใช้งาน" })
+    }
+
+    mysqlPool.getConnection(async function (err, connection) {
+        if (err) {
+            console.log(`[${NAME}] Error -> ${err.message}`);
+            return res.status(500).json({ "isError": true, "message": "ไม่สามารถเชื่อมต่อฐานข้อมูลได้" })
+        } else {
+            var sqlGetMenuRecommendHistory = "select recommend_meal.RecommendID, recommend_meal.Meal, recommend_meal.Date, case when dishs.Dish is null then recommend_meal.Dish else dishs.Dish end as 'Dish', case when dishs.Calories is null then recommend_meal.Calories else dishs.Calories end as 'Calories' from recommend_meal left join dishs on (recommend_meal.DishsId = dishs.DishsId) WHERE recommend_meal.UsersID = ?"
+            connection.query(sqlGetMenuRecommendHistory, [userId, moment().format("YYYY-MM-DD")], function (err, results) {
+                if (err) {
+                    console.log(`[${NAME}][API GET MENU RECOMMEND HISTORY] sqlGetMenuRecommendHistory ERROR -> ${err}`);
+                    return res.status(200).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                }
+
+                if (results.length > 0) {
+                    return res.status(200).json({
+                        "isError": false,
+                        "recommendHistory": results
                     })
                 }
             })

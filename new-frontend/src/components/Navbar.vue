@@ -39,6 +39,10 @@
               แนะนำเมนู
             </router-link>
             <a class="nav-link disabled"> | </a>
+            <router-link class="nav-item nav-link" to="/history">
+              ประวัติการแนะนำ
+            </router-link>
+            <a class="nav-link disabled"> | </a>
             <router-link
               :to="'#'"
               v-on:click.native="signOut"

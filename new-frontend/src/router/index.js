@@ -5,6 +5,7 @@ import SignUp from '@/views/SignUp.vue'
 import SignIn from '@/views/SignIn.vue'
 import Main from '@/views/Main.vue'
 import Recommend from '@/views/Recommend.vue'
+import History from '@/views/History.vue'
 import PageNotFound from '@/views/PageNotFound.vue'
 
 Vue.use(VueRouter)
@@ -59,6 +60,15 @@ const routes = [
     path: '/recommend',
     name: 'Recommend',
     component: Recommend,
+    meta: {
+      requireUser: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/history',
+    name: 'History',
+    component: History,
     meta: {
       requireUser: true,
       requiresAuth: true

@@ -36,6 +36,10 @@ html {
   text-align: left !important;
 }
 
+.text-center {
+  text-align: center !important;
+}
+
 .text-right {
   text-align: right !important;
 }
