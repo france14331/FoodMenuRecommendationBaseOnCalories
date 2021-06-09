@@ -572,6 +572,11 @@ app.get('/menu/recommend/:userid/today', (req, res) => {
                         "recommendToday": results
                     })
                 }
+
+                return res.status(200).json({
+                    "isError": false,
+                    "message": "ไม่พบข้อมูล"
+                })
             })
         }
     })
@@ -604,6 +609,11 @@ app.get('/menu/recommend/:userid/history', (req, res) => {
                         "recommendHistory": results
                     })
                 }
+
+                return res.status(200).json({
+                    "isError": false,
+                    "message": "ไม่พบข้อมูล"
+                })
             })
         }
     })

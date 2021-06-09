@@ -140,7 +140,7 @@
                         <b>ชื่อเมนู:</b>
                         {{
                           recommendToday.lunch.dishName == null ||
-                          recommendToday.lunch.dishName == null
+                          recommendToday.lunch.dishName == ''
                             ? "ไม่พบการบันทึก"
                             : recommendToday.lunch.dishName
                         }}
@@ -170,7 +170,7 @@
                         <b>ชื่อเมนู:</b>
                         {{
                           recommendToday.dinner.dishName == null ||
-                          recommendToday.dinner.dishName == null
+                          recommendToday.dinner.dishName == ''
                             ? "ไม่พบการบันทึก"
                             : recommendToday.dinner.dishName
                         }}
@@ -451,7 +451,7 @@ export default {
     Navbar,
   },
   created() {
-    this.gerRecommendToday();
+    this.getRecommendToday();
   },
   data: () => {
     return {
@@ -653,7 +653,7 @@ export default {
               allowOutsideClick: false,
             }).then((result) => {
               if (result.isConfirmed) {
-                this.gerRecommendToday();
+                this.getRecommendToday();
               }
             });
           }
@@ -663,7 +663,7 @@ export default {
           this.hideLoading();
         });
     },
-    gerRecommendToday() {
+    getRecommendToday() {
       this.showLoading();
 
       let userProfile = JSON.parse(localStorage.getItem("user"));
