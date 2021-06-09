@@ -140,7 +140,7 @@
                         <b>ชื่อเมนู:</b>
                         {{
                           recommendToday.lunch.dishName == null ||
-                          recommendToday.lunch.dishName == ''
+                          recommendToday.lunch.dishName == ""
                             ? "ไม่พบการบันทึก"
                             : recommendToday.lunch.dishName
                         }}
@@ -170,7 +170,7 @@
                         <b>ชื่อเมนู:</b>
                         {{
                           recommendToday.dinner.dishName == null ||
-                          recommendToday.dinner.dishName == ''
+                          recommendToday.dinner.dishName == ""
                             ? "ไม่พบการบันทึก"
                             : recommendToday.dinner.dishName
                         }}
@@ -653,6 +653,30 @@ export default {
               allowOutsideClick: false,
             }).then((result) => {
               if (result.isConfirmed) {
+                if (payloads.meal == "breakfast") {
+                  this.menuRecommend.breakfast.id = "";
+                  this.menuRecommend.breakfast.name = "";
+                  this.menuRecommend.breakfast.calories = "";
+                  this.menuRecommend.breakfast.restaurant = "";
+                  this.menuRecommend.breakfast.nameRestaurant = "";
+                }
+
+                if (payloads.meal == "lunch") {
+                  this.menuRecommend.lunch.id = "";
+                  this.menuRecommend.lunch.name = "";
+                  this.menuRecommend.lunch.calories = "";
+                  this.menuRecommend.lunch.restaurant = "";
+                  this.menuRecommend.lunch.nameRestaurant = "";
+                }
+
+                if (payloads.meal == "dinner") {
+                  this.menuRecommend.dinner.id = "";
+                  this.menuRecommend.dinner.name = "";
+                  this.menuRecommend.dinner.calories = "";
+                  this.menuRecommend.dinner.restaurant = "";
+                  this.menuRecommend.dinner.nameRestaurant = "";
+                }
+
                 this.getRecommendToday();
               }
             });
