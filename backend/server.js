@@ -425,7 +425,7 @@ app.get('/user/:userid/info', (req, res) => {
 //     "height": 0,
 //     "actPerWeek": 0,
 //     "age": 23,
-//     "gender": "ผู้ชาย"
+//     "gender": "ชาย"
 // }
 // Format JSON //
 app.post('/user/:userid/info/update', (req, res) => {
@@ -469,8 +469,6 @@ app.post('/user/:userid/info/update', (req, res) => {
         tdee = bmr * 1.9
     }
 
-    console.log(weight, height, actPerWeek, bmr, tdee, userId, age, gender)
-
     mysqlPool.getConnection(async function (err, connection) {
         if (err) {
             console.log(`[${NAME}] Error -> ${err.message}`);
@@ -492,6 +490,93 @@ app.post('/user/:userid/info/update', (req, res) => {
     })
 })
 
+// API SAVE RECOMMEND MENU
+// Format JSON //
+// {
+//     "userId": "5",
+//     "meal": "dinner",
+//     "dishId": "1",
+//     "dishName": "1000",
+//     "calories": "100"
+// }
+// Format JSON //
+app.post('/menu/recommend/save', (req, res) => {
+    let userId = req.body.userId;
+    let meal = req.body.meal;
+    let dishId = req.body.dishId
+    let dishName = req.body.dishName
+    let calories = req.body.calories
+
+    mysqlPool.getConnection(async function (err, connection) {
+        if (err) {
+            console.log(`[${NAME}] Error -> ${err.message}`);
+            return res.status(500).json({ "isError": true, "message": "ไม่สามารถเชื่อมต่อฐานข้อมูลได้" })
+        } else {
+            connection.beginTransaction(function (err) {
+                if (err) {
+                    console.log(`[${NAME}][API SAVE RECOMMEND MENU] SQL BEGIN TRANSACTION ERROR -> ${err}`);
+                    return res.status(200).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                }
+
+                var sqlInsertMenuRecommend = "INSERT INTO recommend_meal (Meal, UsersID, DishsID, Date, Dish, Calories) VALUES (?, ?, ?, ?, ?, ?)"
+                connection.query(sqlInsertMenuRecommend, [meal, userId, dishId, moment().format("YYYY-MM-DD"), dishName, calories], function (err, results) {
+                    if (err) {
+                        connection.rollback(function () {
+                            console.log(`[${NAME}][API SAVE RECOMMEND MENU] sqlInsertMenuRecommend ERROR -> ${err}`);
+                            return res.status(200).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                        })
+                    }
+
+                    connection.commit(function (err) {
+                        if (err) {
+                            connection.rollback(function () {
+                                console.log(`[${NAME}][API SAVE RECOMMEND MENU] SQL COMMIT ERROR -> ${err.message}`);
+                                return res.status(500).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                            })
+                        }
+
+                        console.log(`[${NAME}][API SAVE RECOMMEND MENU] -> "INSERT MENU RECOMMEND SUCCESS"`);
+
+                        return res.status(200).json({ "isError": false, "message": "บันทึกมื้ออาหารสำเร็จ" })
+                    })
+                })
+            })
+        }
+    })
+})
+
+// API GET TODAY MENU RECOMMEND
+app.get('/menu/recommend/:userid/today', (req, res) => {
+    let userId = req.params.userid;
+
+    // Validate
+    if (isEmptyOrSpaces(userId)) {
+        return res.status(200).json({ "isError": true, "message": "ไม่พบข้อมูลผู้ใช้งาน" })
+    }
+
+    mysqlPool.getConnection(async function (err, connection) {
+        if (err) {
+            console.log(`[${NAME}] Error -> ${err.message}`);
+            return res.status(500).json({ "isError": true, "message": "ไม่สามารถเชื่อมต่อฐานข้อมูลได้" })
+        } else {
+            var sqlGetToDayMenuRecommend = "SELECT UsersID, Meal FROM recommend_meal WHERE UsersID = ? AND Date = ?"
+            connection.query(sqlGetToDayMenuRecommend, [userId, moment().format("YYYY-MM-DD")], function (err, results) {
+                if (err) {
+                    console.log(`[${NAME}][API GET TODAY MENU RECOMMEND] sqlInsertMenuRecommend ERROR -> ${err}`);
+                    return res.status(200).json({ "isError": true, "message": "ไม่สามารถทำรายการได้เนื่องจากเกิดจากความผิดพลาดของระบบ" })
+                }
+
+                if (results.length > 0) {
+                    return res.status(200).json({
+                        "isError": false,
+                        "recommendToday": results
+                    })
+                }
+            })
+        }
+    })
+})
+
 // Utils //
 function isEmptyOrSpaces(str) {
     return str === null || str.match(/^ *$/) !== null;
@@ -500,5 +585,3 @@ function isEmptyOrSpaces(str) {
 
 app.listen(PORT, HOST);
 console.log(`[${NAME}] Running on http://${HOST}:${PORT}`);
-
-// test push
